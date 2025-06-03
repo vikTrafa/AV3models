@@ -1,0 +1,1 @@
+Aqui será posto a codificação dos diagramas.
