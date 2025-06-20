@@ -1,0 +1,84 @@
+@startuml
+start
+
+:Iniciar sessão no sistema;
+
+partition CadastroCliente {
+  :Inserir dados pessoais;
+  :Validar CPF;
+  :Calcular idade;
+  if (Idade < 18 ou > 120?) then (Sim)
+    :Rejeitar cadastro;
+    stop
+  else (Não)
+    :Inserir profissão, renda e estado civil;
+    :Anexar documentos;
+    :Integrar pontuação de crédito;
+  endif
+}
+
+partition CadastroConta {
+  :Selecionar tipo de conta;
+  :Gerar número da conta;
+  :Vincular cliente;
+  :Definir titulares;
+  :Inserir data, agência, gerente;
+  :Inserir saldo inicial;
+  if (Saldo < 0?) then (Sim)
+    :Rejeitar entrada;
+    stop
+  else (Não)
+    :Definir nível de serviço;
+  endif
+}
+
+partition OperacoesFinanceiras {
+  :Selecionar operação (depósito, saque, transferência, boleto, PIX);
+  :Inserir dados;
+  if (Valor inválido ou saldo insuficiente?) then (Sim)
+    :Rejeitar operação;
+  else (Não)
+    :Registrar timestamp e canal;
+    :Gerar comprovante;
+    :Armazenar histórico;
+  endif
+}
+
+partition PIX {
+  :Selecionar tipo de chave;
+  :Validar chave e limites;
+}
+
+partition Extratos {
+  :Calcular e exibir saldo;
+  :Personalizar extrato;
+  :Exibir gráficos e categorizar gastos;
+  :Exportar extratos;
+  :Armazenar por 5 anos;
+}
+
+partition Seguranca {
+  :Autenticação 2FA;
+  :Criptografar dados;
+  :Registrar logs;
+  :Detectar fraudes;
+  :Bloquear após tentativas;
+  :Controlar acesso por nível;
+}
+
+partition Desempenho {
+  :Medição de tempo de resposta;
+  :Garantir disponibilidade;
+  :Monitorar métricas de negócio;
+}
+
+partition Interface {
+  :Exibir interface responsiva;
+  :Garantir compatibilidade;
+  :Preparar para escalabilidade;
+}
+
+:Encerrar sessão;
+
+stop
+@enduml

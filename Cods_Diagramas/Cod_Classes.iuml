@@ -1,0 +1,174 @@
+,,@startuml
+
+' --- Agrupamento de classes de USUÁRIO/CLIENTE ---
+package "Cliente e Autenticação" {
+  class Cliente {
+    - id: int
+    - nome: String
+    - cpf: String
+    - dataNascimento: Date
+    - endereco: String
+    - email: String
+    - telefone: String
+    - profissao: String
+    - rendaMensal: float
+    - estadoCivil: String
+    - idade: int
+    - rg: String
+    - documentos: List<String>
+    + SetAtualizarDados(): void
+    + SetAdicionarDocumentos(): void
+    + GetConsultarPontuacao(): void
+    + GetVisualizarContas(): void
+    + GetConsultarHistorico(): void
+    + ValidarCPF(): boolean
+    + CalcularIdade(): void
+  }
+
+  class Autenticacao {
+    + Login(usuario: String, senha: String): boolean
+    + Logout(): void
+    + RedefinirSenha(email: String): void
+    + AtualizarFAQ(): void
+    + BloquearConta(): void
+  }
+
+  class Notificacao {
+    - tipo: String
+    - mensagem: String
+    - dataHora: Date
+    + EnviarNotificacao(cliente: Cliente): void
+    + ConsultarNotificacoes(): void
+  }
+}
+
+' --- Agrupamento das CONTAS e VARIAÇÕES ---
+package "Contas Bancárias" {
+  class Conta {
+    - id: int
+    - nomeCliente: String
+    - tipoConta: String
+    - saldo: double
+    - status: String
+    - dataAbertura: Date
+    + Depositar(): void
+    + Sacar(): boolean
+    + TransferirPara(destino: Conta, valor: float): void
+    + SetDefinirTitular(): void
+    + SetDefinirColateral(): void
+    + CalcularJuros(): double
+    + CalcularSaldoDisponivel(): double
+  }
+
+  class ContaCorrente {
+    - limiteCredito: double
+    - tarifaManutencao: double
+    + SacarValor(): double
+    + CalcularJuros(): double
+    + DefinirLimite(): void
+  }
+
+  class ContaPoupanca {
+    - taxaJuros: double
+    + CalcularJuros(): double
+  }
+
+  class ContaInvestimento {
+    - tipoInvestimento: String
+    - rendimento: double
+    + CalcularJuros(): double
+  }
+}
+
+' --- Agrupamento de OPERAÇÕES E FINANÇAS ---
+package "Transações e Operações" {
+  class Transacao {
+    - id: int
+    - deposito: double
+    - saque: double
+    - transferencia: double
+    - dataHora: Date
+    - valor: String
+    - status: String
+    + GetValidarTransacao(): boolean
+    + GetGerarComprovante(): String
+    + GetConsultarSaldoDisponivel(): double
+    + GetCancelarTransacao(): void
+    + SetAgendar(data: Date): void
+    + SetExternar(): void
+    + VerificarValorNegativo(): void
+    + GetValorLimiteSeguranca(): void
+  }
+
+  class Extrato {
+    - id: int
+    - saldoInicial: double
+    - saldoFinal: double
+    - data: Date
+    - formatoExportacao: String
+    + SetExportar(): void
+    + SetFiltrarPorOperacao(): void
+    + SetGerarGrafico(): void
+    + GetGerarComprovante(): String
+  }
+
+  class Auditoria {
+    - id: int
+    - tipo: String
+    - dataHora: Date
+    + registrarOperacao(): void
+    + consultarAuditoria(): String
+  }
+
+  class Pix {
+    - chave: String
+    - limiteTransferencia: double
+    + GetValidarChave(): boolean
+    + GetRealizarTransacao(): void
+    + GetConsultarHistorico(): void
+    + DefinirLimite(): void
+  }
+}
+
+' --- OUTROS ---
+class Agencia {
+  - codigoAgencia: int
+  - endereco: String
+  - nomeCliente: String
+  + GetVincularCliente(): void
+  + SetListarContas(): void
+  + GetAtentarOperacoes(): void
+}
+
+class Cartao {
+  - nomeTitular: String
+  - numeroCartao: String
+  - tipoCartao: String
+  - validade: Date
+  - cvv: int
+  + GetValidarCartao(): void
+  + SetBloquearCartao(): void
+  + SetAjustarLimite(): void
+  + GetConsultarFatura(): void
+  + GetRealizarPagamentos(): void
+  + GetConsultarLimiteDisponivel(): void
+}
+
+' --- Heranças (generalizações) ---
+ContaCorrente --|> Conta
+ContaPoupanca --|> Conta
+ContaInvestimento --|> Conta
+
+' --- Relacionamentos (associações) ---
+Cliente "1" -- "0..*" Conta
+Cliente "1" -- "0..*" Notificacao
+Conta "1" -- "0..*" Cartao
+Conta "1" -- "0..*" Transacao
+Conta "1" -- "0..1" Extrato
+Conta "1" -- "1" Agencia
+Conta "1" -- "0..1" Pix
+Conta "1" -- "0..*" Auditoria
+Cliente "1" -- "1" Autenticacao
+
+
+@enduml

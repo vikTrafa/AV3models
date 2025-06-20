@@ -1,0 +1,65 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor Cliente
+actor Funcionario
+
+rectangle "Sistema ZBank" {
+
+  ' ===== Operações financeiras =====
+  package "Operações Financeiras" {
+    usecase "Realizar Saque" as UC_Saque
+    usecase "Realizar Depósito" as UC_Deposito
+    usecase "Realizar Transferência" as UC_Transferencia
+    usecase "Realizar Transação PIX" as UC_PIX
+    usecase "Realizar Pagamento de Boleto" as UC_Boleto
+    usecase "Emitir Comprovante" as UC_Comprovante
+  }
+
+  ' ===== Consultas e Relatórios =====
+  package "Consultas e Relatórios" {
+    usecase "Consultar Saldo" as UC_Saldo
+    usecase "Emitir Extrato" as UC_Extrato
+    usecase "Exportar Extrato" as UC_Exportar
+    usecase "Visualizar Gráficos de Fluxo de Caixa" as UC_Graficos
+  }
+
+  ' ===== Cadastro =====
+  package "Cadastro" {
+    usecase "Cadastrar Usuário" as UC_CadUsuario
+    usecase "Cadastrar Conta" as UC_CadConta
+    usecase "Definir Titulares/Cotitulares" as UC_Titulares
+    usecase "Definir Nível de Serviço" as UC_NivelServico
+    usecase "Anexar Documentos" as UC_AnexarDocs
+  }
+}
+
+' Relacionamentos Cliente
+Cliente --> UC_Saque
+Cliente --> UC_Deposito
+Cliente --> UC_Transferencia
+Cliente --> UC_PIX
+Cliente --> UC_Boleto
+Cliente --> UC_Saldo
+Cliente --> UC_Extrato
+Cliente --> UC_Graficos
+Cliente --> UC_AnexarDocs
+
+' Operações financeiras com comprovante
+UC_Saque --> UC_Comprovante : <<include>>
+UC_Deposito --> UC_Comprovante : <<include>>
+UC_Transferencia --> UC_Comprovante : <<include>>
+UC_PIX --> UC_Comprovante : <<include>>
+UC_Boleto --> UC_Comprovante : <<include>>
+
+' Extrato inclui exportação
+UC_Extrato --> UC_Exportar : <<include>>
+
+' Relacionamentos Funcionário
+Funcionario --> UC_CadUsuario
+Funcionario --> UC_CadConta
+UC_CadConta --> UC_Titulares : <<include>>
+UC_CadConta --> UC_NivelServico : <<include>>
+
+@enduml

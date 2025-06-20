@@ -1,0 +1,76 @@
+@startuml
+title Diagrama de Sequência Simplificado - ZBank
+
+actor Cliente
+actor Atendente
+participant "Interface" as UI
+participant "Serviços Internos" as Internos
+database "Banco de Dados" as DB
+
+== Cadastro de Cliente ==
+Atendente -> UI: Preenche dados do cliente
+UI -> Internos: Validar CPF e calcular idade
+Internos --> UI: Resultado
+UI -> DB: Salvar cliente
+DB --> UI: Confirmação
+
+== Abertura de Conta ==
+Atendente -> UI: Iniciar abertura de conta
+UI -> Internos: Gerar número de conta
+Internos --> UI: Número da conta
+UI -> DB: Salvar nova conta
+DB --> UI: Confirmação
+
+== Depósito ==
+Cliente -> UI: Informar conta e valor
+UI -> DB: Atualizar saldo
+UI -> Internos: Gerar comprovante
+Internos --> UI: Comprovante
+UI --> Cliente: Exibir comprovante
+
+== Saque ==
+Cliente -> UI: Solicitar saque
+UI -> DB: Verificar saldo
+alt Saldo suficiente
+    DB -> DB: Atualizar saldo
+    UI -> Internos: Gerar comprovante
+    Internos --> UI: Comprovante
+    UI --> Cliente: Exibir comprovante
+else Saldo insuficiente
+    UI --> Cliente: Exibir erro
+end
+
+== Transferência entre Contas ==
+Cliente -> UI: Informar contas e valor
+UI -> DB: Verificar saldo da conta origem
+alt Saldo suficiente
+    DB -> DB: Debitar origem, creditar destino
+    UI -> Internos: Gerar comprovante
+    Internos --> UI: Comprovante
+    UI --> Cliente: Exibir comprovante
+else Saldo insuficiente
+    UI --> Cliente: Exibir erro
+end
+
+== Transação PIX ==
+Cliente -> UI: Informar chave PIX e valor
+UI -> Internos: Validar chave PIX
+Internos --> UI: Conta destino
+UI -> DB: Verificar saldo e limites
+alt Aprovado
+    DB -> DB: Debitar origem, creditar destino
+    UI -> Internos: Gerar comprovante PIX
+    Internos --> UI: Comprovante
+    UI --> Cliente: Exibir comprovante
+else Reprovado
+    UI --> Cliente: Exibir erro
+end
+
+== Consulta de Extrato ==
+Cliente -> UI: Selecionar conta e filtros
+UI -> DB: Buscar transações
+UI -> Internos: Gerar extrato com gráficos
+Internos --> UI: Extrato
+UI --> Cliente: Exibir extrato
+
+@enduml
