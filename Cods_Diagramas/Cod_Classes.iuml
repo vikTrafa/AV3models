@@ -55,7 +55,7 @@ package "Contas Bancárias" {
     + Sacar(): boolean
     + TransferirPara(destino: Conta, valor: float): void
     + SetDefinirTitular(): void
-    + SetDefinirColateral(): void
+    + SetDefinirCoTitular(): void
     + CalcularJuros(): double
     + CalcularSaldoDisponivel(): double
   }
@@ -104,7 +104,7 @@ package "Transações e Operações" {
     - id: int
     - saldoInicial: double
     - saldoFinal: double
-    - data: Date
+    - dataHora: Date
     - formatoExportacao: String
     + SetExportar(): void
     + SetFiltrarPorOperacao(): void
@@ -137,7 +137,7 @@ class Agencia {
   - nomeCliente: String
   + GetVincularCliente(): void
   + SetListarContas(): void
-  + GetAtentarOperacoes(): void
+  + GetAutenticarOperacoes(): void
 }
 
 class Cartao {
